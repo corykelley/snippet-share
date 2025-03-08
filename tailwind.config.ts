@@ -3,6 +3,13 @@ import { type Config } from "tailwindcss";
 export default {
   darkMode: ["class"],
   content: ["./src/**/*.tsx"],
+  container: {
+    center: true,
+    padding: "2rem",
+    screens: {
+      sm: "1360px",
+    },
+  },
   theme: {
     extend: {
       fontFamily: {},
