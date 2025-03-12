@@ -8,5 +8,5 @@ export default {
   dbCredentials: {
     url: env.DATABASE_URL,
   },
-  tablesFilter: ["snippet-share_*"],
+  tablesFilter: ["code-milkshake_*"],
 } satisfies Config;

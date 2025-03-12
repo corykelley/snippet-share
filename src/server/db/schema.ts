@@ -1,14 +1,5 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
 import { sql } from "drizzle-orm";
-import {
-  index,
-  integer,
-  pgTableCreator,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
+import * as t from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -16,21 +7,27 @@ import {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `snippet-share_${name}`);
+export const createTable = t.pgTableCreator((name) => `code-milkshake_${name}`);
 
-export const posts = createTable(
-  "post",
-  {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
-    ),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
-);
+export const languageEnum = t.pgEnum("language", [
+  "javascript",
+  "typescript",
+  "liquid",
+  "css",
+]);
+
+export const snippets = createTable("snippet", {
+  id: t.integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  name: t.varchar("name", { length: 256 }).notNull(),
+  code: t.varchar("code", { length: 1024 }).notNull(),
+  isPublic: t.boolean("is_public").default(false),
+  language: languageEnum("language").default("javascript"),
+  description: t.varchar("description", { length: 512 }),
+  createdAt: t
+    .timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: t
+    .timestamp("updated_at", { withTimezone: true })
+    .$onUpdate(() => new Date()),
+});
